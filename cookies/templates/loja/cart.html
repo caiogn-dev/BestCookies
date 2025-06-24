@@ -1,0 +1,16 @@
+{% extends 'loja/base.html' %}
+{% block title %}Carrinho{% endblock %}
+{% block content %}
+<h2>Seu Carrinho</h2>
+{% if items %}
+<ul>
+  {% for item in items %}
+    <li>{{ item.quantity }}x {{ item.product.name }} - R$ {{ item.get_total_price }}</li>
+  {% endfor %}
+</ul>
+<p><strong>Total:</strong> R$ {{ total }}</p>
+<a href="{% url 'checkout' %}">Finalizar Pedido</a>
+{% else %}
+<p>Seu carrinho está vazio.</p>
+{% endif %}
+{% endblock %}

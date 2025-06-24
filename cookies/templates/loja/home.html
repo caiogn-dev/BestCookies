@@ -1,0 +1,16 @@
+{% extends 'loja/base.html' %}
+{% load static %}
+{% block title %}Início{% endblock %}
+{% block content %}
+<h2>Cookies disponíveis</h2>
+<div class="produtos">
+  {% for produto in produtos %}
+    <div>
+      <img src="{{ produto.image.url }}" alt="{{ produto.name }}" width="150">
+      <h3>{{ produto.name }}</h3>
+      <p>R$ {{ produto.price }}</p>
+      <a href="{% url 'produto_detalhe' produto.pk %}">Ver mais</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

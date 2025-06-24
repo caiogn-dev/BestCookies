@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Loja de Cookies{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-yellow-50 text-gray-800">
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/" class="text-2xl font-bold text-yellow-700 flex items-center gap-2">
+        🍪 Ivoneth Cookies
+      </a>
+      <nav class="flex gap-4 items-center">
+        <a href="/" class="text-sm hover:text-yellow-600">Home</a>
+        <a href="/carrinho/" class="text-sm hover:text-yellow-600">Carrinho</a>
+
+        {% if user.is_authenticated %}
+          <span class="text-sm">Olá, {{ user.username }}</span>
+          <a href="#" class="text-sm hover:text-yellow-600">Perfil</a>
+          <form action="{% url 'logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-sm text-red-600 hover:underline">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="text-sm hover:text-yellow-600">Login</a>
+          <a href="{% url 'register' %}" class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Cadastrar</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    {% if messages %}
+      <ul class="mb-4">
+        {% for message in messages %}
+          <li class="bg-yellow-100 text-yellow-800 p-2 rounded mb-2">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-yellow-100 py-6 text-center text-sm text-yellow-800">
+    &copy; 2025 Ivoneth Banqueteria • Todos os direitos reservados
+  </footer>
+</body>
+</html>
