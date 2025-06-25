@@ -7,6 +7,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from .models import Product, CartItem, Customer, Order
 from .forms import CustomUserCreationForm, EmailAuthenticationForm
+from django.http import HttpResponse, Http404
+from django.conf import settings
+import os
 
 # Lista de produtos
 class HomeView(ListView):
@@ -101,3 +104,18 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     template_name = 'auth/logged_out.html'
     next_page = reverse_lazy('home')
+
+
+class MediaListView(View):
+    def get(self, request, path=''):
+        abs_path = os.path.join(settings.MEDIA_ROOT, path)
+        if not os.path.exists(abs_path):
+            raise Http404("Diretório não encontrado.")
+        if os.path.isfile(abs_path):
+            raise Http404("Não é um diretório.")
+        files = os.listdir(abs_path)
+        links = []
+        for f in files:
+            url = request.path.rstrip('/') + '/' + f
+            links.append(f'<li><a href="{url}">{f}</a></li>')
+        return HttpResponse(f'<h2>Arquivos em /imagens/{path}</h2><ul>{''.join(links)}</ul>')

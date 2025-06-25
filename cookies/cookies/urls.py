@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.views.static import serve
+from loja.views import MediaListView
 
 
 urlpatterns = [
@@ -18,6 +19,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('me/', MeView.as_view(), name='me'),
     path('imagens/<path:path>/', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('imagens/<path:path>', MediaListView.as_view()),
+    path('imagens/', MediaListView.as_view(), {'path': ''}),
 ]
 
 if settings.DEBUG:
