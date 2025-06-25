@@ -167,3 +167,5 @@ SIMPLE_JWT = {
 }
 
 CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com']
+
+APPEND_SLASH = False
