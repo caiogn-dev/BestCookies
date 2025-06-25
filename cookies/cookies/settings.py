@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "loja",  # Aplicação da loja de cookies
     "rest_framework",   # Django REST Framework para APIs
+    "corsheaders", # Para lidar com CORS
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware", # Middleware para CORS
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve staticfiles em produção
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -169,3 +171,26 @@ SIMPLE_JWT = {
 CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com', 'https://bestcookies-wtdk.onrender.com']
 
 APPEND_SLASH = False
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
