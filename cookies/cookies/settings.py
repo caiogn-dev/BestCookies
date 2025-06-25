@@ -163,3 +163,5 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com']
