@@ -1,16 +1,44 @@
 {% extends 'loja/base.html' %}
 {% block title %}Carrinho{% endblock %}
 {% block content %}
-<h2>Seu Carrinho</h2>
-{% if items %}
-<ul>
-  {% for item in items %}
-    <li>{{ item.quantity }}x {{ item.product.name }} - R$ {{ item.get_total_price }}</li>
-  {% endfor %}
-</ul>
-<p><strong>Total:</strong> R$ {{ total }}</p>
-<a href="{% url 'checkout' %}">Finalizar Pedido</a>
-{% else %}
-<p>Seu carrinho está vazio.</p>
-{% endif %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-cyan-50 to-white py-10 relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none z-0">
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-200 rounded-full opacity-30 blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-100 rounded-full opacity-30 blur-3xl"></div>
+  </div>
+  <div class="relative z-10 w-full max-w-3xl bg-white/80 glass rounded-3xl shadow-2xl p-8 md:p-14">
+    <h2 class="text-3xl font-bold text-center mb-8 text-emerald-700">Seu Carrinho</h2>
+    {% if items %}
+      <ul class="divide-y divide-emerald-100">
+        {% for item in items %}
+          <li class="flex items-center justify-between py-6">
+            <div class="flex items-center gap-4">
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-2xl border-4 border-emerald-200">
+              <div>
+                <span class="font-extrabold text-lg text-gray-800">{{ item.product.name }}</span><br>
+                <span class="text-emerald-600 font-bold">R$ {{ item.product.price }}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="{% url 'remover_item' item.pk %}" class="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-lg font-bold">-</a>
+              <span class="font-semibold text-lg">{{ item.quantity }}</span>
+              <form action="{% url 'add_carrinho' item.product.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="bg-emerald-400 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-lg font-bold">+</button>
+              </form>
+            </div>
+            <span class="text-emerald-600 font-bold text-lg">R$ {{ item.get_total_price }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="flex justify-between items-center mt-8">
+        <span class="text-2xl font-bold text-gray-800">Total:</span>
+        <span class="text-2xl font-bold text-emerald-700">R$ {{ total }}</span>
+      </div>
+      <a href="{% url 'checkout' %}" class="block w-full mt-8 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-4 rounded-lg shadow text-center text-lg transition-colors duration-200">Finalizar Pedido</a>
+    {% else %}
+      <p class="text-center text-gray-500 mt-10">Seu carrinho está vazio.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

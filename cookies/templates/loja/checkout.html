@@ -1,7 +1,59 @@
 {% extends 'loja/base.html' %}
-{% block title %}Pedido Confirmado{% endblock %}
+{% block title %}Finalizar Pedido{% endblock %}
 {% block content %}
-<h2>Pedido realizado com sucesso!</h2>
-<p>Número do pedido: {{ order.id }}</p>
-<a href="{% url 'home' %}">Voltar à loja</a>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-cyan-50 to-white py-10 relative overflow-hidden">
+  <div class="relative z-10 w-full max-w-2xl bg-white/80 glass rounded-3xl shadow-2xl p-8 md:p-14">
+    <h2 class="text-3xl font-bold text-center mb-8 text-emerald-700">Finalizar Pedido</h2>
+    {% if finalizado %}
+      <div class="text-center">
+        <h3 class="text-2xl font-bold text-emerald-700 mb-4">Pedido realizado com sucesso!</h3>
+        <p>Número do pedido: {{ order.id }}</p>
+        <a href="/" class="mt-6 inline-block text-cyan-600 hover:underline">Voltar à loja</a>
+      </div>
+    {% else %}
+    <form id="checkout-form" class="flex flex-col gap-6">
+      <div>
+        <label for="endereco" class="block text-sm font-semibold text-gray-700 mb-1">Endereço:</label>
+        <input type="text" id="endereco" name="endereco" class="w-full rounded-lg border border-emerald-200 px-4 py-2" required>
+      </div>
+      <div>
+        <label for="pagamento" class="block text-sm font-semibold text-gray-700 mb-1">Método de Pagamento:</label>
+        <select id="pagamento" name="pagamento" class="w-full rounded-lg border border-emerald-200 px-4 py-2" required>
+          <option value="Pix">Pix</option>
+          <option value="Cartão">Cartão</option>
+          <option value="Dinheiro">Dinheiro</option>
+        </select>
+      </div>
+      <div class="bg-emerald-50 rounded-lg p-4">
+        <h3 class="font-bold text-emerald-700 mb-2">Resumo do Pedido:</h3>
+        <ul class="text-gray-700 mb-2" id="pedido-lista">
+          {% for item in items %}
+            <li data-preco="{{ item.get_total_price|floatformat:2 }}">{{ item.quantity }}x {{ item.product.name }} - R$ {{ item.get_total_price|floatformat:2 }}</li>
+          {% endfor %}
+        </ul>
+        <div class="font-bold text-lg text-emerald-800" id="total-pedido" data-total="{{ total|floatformat:2 }}">Total: R$ {{ total|floatformat:2 }}</div>
+      </div>
+      {% if items %}
+      <button type="button" onclick="enviarWhatsApp()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg shadow text-lg transition-colors duration-200">Finalizar pelo WhatsApp</button>
+      {% endif %}
+    </form>
+    <a href="/" class="block mt-6 text-cyan-600 hover:underline text-center">Voltar para a Home</a>
+    {% endif %}
+  </div>
+</div>
+<script>
+function enviarWhatsApp() {
+  const endereco = document.getElementById('endereco').value;
+  const pagamento = document.getElementById('pagamento').value;
+  let pedido = '';
+  document.querySelectorAll('#pedido-lista li').forEach(li => pedido += li.innerText + '\n');
+  const total = document.getElementById('total-pedido').getAttribute('data-total');
+  const nome = "{{ user.get_full_name|default:user.username }}";
+  const msg = encodeURIComponent(
+    `Olá! Quero finalizar meu pedido:\n${pedido}Total: R$ ${total}\nMétodo de pagamento: ${pagamento}\nNome: ${nome}\nEndereço: ${endereco}`
+  );
+  const numero = '5563920014688';
+  window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+}
+</script>
 {% endblock %}

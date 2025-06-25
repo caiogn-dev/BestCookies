@@ -6,17 +6,45 @@ from django.contrib.auth import authenticate
 
 # Formulário de criação de usuário com e-mail
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="E-mail")
+    name = forms.CharField(
+        required=True, label="Nome",
+        widget=forms.TextInput(attrs={
+            "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 mb-2"
+        })
+    )
+    email = forms.EmailField(
+        required=True, label="E-mail",
+        widget=forms.EmailInput(attrs={
+            "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 mb-2"
+        })
+    )
+    address = forms.CharField(
+        required=True, label="Endereço",
+        widget=forms.Textarea(attrs={
+            "rows": 2,
+            "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 mb-2"
+        })
+    )
+    cep = forms.CharField(
+        required=True, label="CEP", max_length=9,
+        widget=forms.TextInput(attrs={
+            "class": "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 mb-2"
+        })
+    )
 
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("name", "email", "address", "cep", "password1", "password2")
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
+        user.username = self.cleaned_data["name"]
         if commit:
             user.save()
+            # Cria o Customer com endereço
+            from .models import Customer
+            Customer.objects.create(user=user, address=self.cleaned_data["address"], cep=self.cleaned_data["cep"])
         return user
 
 # Formulário de login via e-mail

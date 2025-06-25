@@ -27,8 +27,8 @@ class Product(models.Model):
 # Cliente (vinculado ao User)
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=20)
     address = models.TextField()
+    cep = models.CharField(max_length=9, blank=True)
 
     def __str__(self):
         return self.user.username

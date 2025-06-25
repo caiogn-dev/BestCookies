@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'address')
+    list_display = ('user', 'address')
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):

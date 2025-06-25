@@ -5,6 +5,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('produto/<int:pk>/', ProductDetailView.as_view(), name='produto_detalhe'),
     path('adicionar/<int:pk>/', AddToCartView.as_view(), name='add_carrinho'),
+    path('remover/<int:pk>/', RemoveFromCartView.as_view(), name='remover_item'),
     path('carrinho/', CartView.as_view(), name='cart'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('login/', CustomLoginView.as_view(), name='login'),

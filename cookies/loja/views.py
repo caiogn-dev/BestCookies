@@ -24,12 +24,29 @@ class ProductDetailView(DetailView):
 # Adicionar ao carrinho
 class AddToCartView(LoginRequiredMixin, View):
     login_url = '/login/'
-    def get(self, request, pk):
+    def post(self, request, pk):
+        print('DEBUG: AddToCartView chamada para produto', pk, 'por', request.user)
         produto = get_object_or_404(Product, pk=pk)
         customer, _ = Customer.objects.get_or_create(user=request.user)
         item, created = CartItem.objects.get_or_create(customer=customer, product=produto)
-        item.quantity += 1
-        item.save()
+        if not created:
+            item.quantity += 1
+            item.save()
+        # Se foi criado agora, já começa com 1
+        return redirect('cart')
+    def get(self, request, pk):
+        return redirect('cart')
+
+# Remover do carrinho
+class RemoveFromCartView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def get(self, request, pk):
+        item = get_object_or_404(CartItem, pk=pk, customer__user=request.user)
+        if item.quantity > 1:
+            item.quantity -= 1
+            item.save()
+        else:
+            item.delete()
         return redirect('cart')
 
 # Ver carrinho
@@ -55,12 +72,18 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         customer, _ = Customer.objects.get_or_create(user=self.request.user)
         items = CartItem.objects.filter(customer=customer)
+        context['items'] = items
+        context['total'] = sum(item.get_total_price() for item in items)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        customer, _ = Customer.objects.get_or_create(user=request.user)
+        items = CartItem.objects.filter(customer=customer)
         order = Order.objects.create(customer=customer)
         order.items.set(items)
         order.save()
         items.delete()
-        context['order'] = order
-        return context
+        return render(request, 'loja/checkout.html', {'order': order, 'finalizado': True})
 
 # Registro de usuário
 class RegisterView(CreateView):

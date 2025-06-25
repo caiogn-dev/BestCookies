@@ -7,26 +7,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="bg-yellow-50 text-gray-800">
-  <header class="bg-white shadow-md">
+<body class="bg-gradient-to-br from-emerald-50 via-cyan-50 to-white text-gray-800 min-h-screen">
+  <header class="bg-white/80 shadow-md backdrop-blur-lg">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="/" class="text-2xl font-bold text-yellow-700 flex items-center gap-2">
-        🍪 Ivoneth Cookies
+      <a href="/" class="text-2xl font-bold text-emerald-700 flex items-center gap-2">
+        <span class="text-3xl">🍪</span> Best Cookies
       </a>
       <nav class="flex gap-4 items-center">
-        <a href="/" class="text-sm hover:text-yellow-600">Home</a>
-        <a href="/carrinho/" class="text-sm hover:text-yellow-600">Carrinho</a>
+        <a href="/" class="text-sm hover:text-emerald-600">Home</a>
+        <a href="/carrinho/" class="text-sm hover:text-emerald-600">Carrinho</a>
 
         {% if user.is_authenticated %}
           <span class="text-sm">Olá, {{ user.username }}</span>
-          <a href="#" class="text-sm hover:text-yellow-600">Perfil</a>
+          <a href="#" class="text-sm hover:text-emerald-600">Perfil</a>
           <form action="{% url 'logout' %}" method="post" class="inline">
             {% csrf_token %}
             <button type="submit" class="text-sm text-red-600 hover:underline">Logout</button>
           </form>
         {% else %}
-          <a href="{% url 'login' %}" class="text-sm hover:text-yellow-600">Login</a>
-          <a href="{% url 'register' %}" class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Cadastrar</a>
+          <a href="{% url 'login' %}" class="text-sm hover:text-emerald-600">Login</a>
+          <a href="{% url 'register' %}" class="text-sm bg-emerald-500 text-white px-3 py-1 rounded hover:bg-emerald-600">Cadastrar</a>
         {% endif %}
       </nav>
     </div>
@@ -36,7 +36,7 @@
     {% if messages %}
       <ul class="mb-4">
         {% for message in messages %}
-          <li class="bg-yellow-100 text-yellow-800 p-2 rounded mb-2">{{ message }}</li>
+          <li class="bg-emerald-100 text-emerald-800 p-2 rounded mb-2">{{ message }}</li>
         {% endfor %}
       </ul>
     {% endif %}
@@ -44,7 +44,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="bg-yellow-100 py-6 text-center text-sm text-yellow-800">
+  <footer class="bg-emerald-100 py-6 text-center text-sm text-emerald-800">
     &copy; 2025 Ivoneth Banqueteria • Todos os direitos reservados
   </footer>
 </body>
