@@ -6,4 +6,4 @@ psycopg2-binary
 sqlparse
 dj-database-url
 django-environ
-rest_framework_simplejwt
+djangorestframework-simplejwt
