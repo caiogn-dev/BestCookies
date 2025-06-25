@@ -21,3 +21,6 @@ urlpatterns = [
     path('imagens/', MediaListView.as_view(), {'path': ''}),
     path('imagens/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
