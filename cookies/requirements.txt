@@ -1,0 +1,8 @@
+asgiref
+Django
+djangorestframework
+pillow
+psycopg2-binary
+sqlparse
+dj-database-url
+django-environ
