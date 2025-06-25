@@ -110,16 +110,23 @@ class MediaListView(View):
     def get(self, request, path=''):
         abs_path = os.path.join(settings.MEDIA_ROOT, path)
         if not os.path.exists(abs_path):
-            raise Http404("Arquivo ou diretório não encontrado.")
-        if os.path.isfile(abs_path):
-            # Serve o arquivo de mídia
-            from django.http import FileResponse
-            import mimetypes
-            mime_type, _ = mimetypes.guess_type(abs_path)
-            response = FileResponse(open(abs_path, 'rb'), content_type=mime_type or 'application/octet-stream')
-            return response
-        # Se for diretório, lista arquivos
-        files = os.listdir(abs_path)
+            # Se for o diretório raiz e não existir, cria para evitar erro
+            if path == '' and not os.path.exists(settings.MEDIA_ROOT):
+                os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+                files = []
+            else:
+                raise Http404("Arquivo ou diretório não encontrado.")
+        else:
+            if os.path.isfile(abs_path):
+                # Serve o arquivo de mídia
+                from django.http import FileResponse
+                import mimetypes
+                mime_type, _ = mimetypes.guess_type(abs_path)
+                response = FileResponse(open(abs_path, 'rb'), content_type=mime_type or 'application/octet-stream')
+                return response
+            files = os.listdir(abs_path)
+        if not files:
+            return HttpResponse(f'<h2>Sem arquivos em /imagens/{path}</h2>')
         links = []
         for f in files:
             url = request.path.rstrip('/') + '/' + f
