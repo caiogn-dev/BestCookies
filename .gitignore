@@ -32,7 +32,3 @@ media/
 .DS_Store
 Thumbs.db
 
-# Arquivos de configuração do ambiente
-*.env
-.env
-env/

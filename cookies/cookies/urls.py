@@ -18,11 +18,6 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('me/', MeView.as_view(), name='me'),
-    path('imagens/<path:path>/', serve, {'document_root': settings.MEDIA_ROOT}),
-    path('imagens/<path:path>', MediaListView.as_view()),
     path('imagens/', MediaListView.as_view(), {'path': ''}),
+    path('imagens/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
