@@ -7,3 +7,4 @@ sqlparse
 dj-database-url
 django-environ
 djangorestframework-simplejwt
+whitenoise
