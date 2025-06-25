@@ -13,7 +13,7 @@
         {% for item in items %}
           <li class="flex items-center justify-between py-6">
             <div class="flex items-center gap-4">
-              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-2xl border-4 border-emerald-200">
+              <img src="/imagens/{{ item.product.image.name }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-2xl border-4 border-emerald-200">
               <div>
                 <span class="font-extrabold text-lg text-gray-800">{{ item.product.name }}</span><br>
                 <span class="text-emerald-600 font-bold">R$ {{ item.product.price }}</span>
