@@ -1,0 +1,33 @@
+# Ambiente virtual
+venv/
+.env
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Banco de dados SQLite
+*.sqlite3
+
+# Arquivos temporários
+*.log
+*.pot
+*.mo
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Arquivos do Django
+*.db
+media/
+
+# VSCode
+.vscode/
+
+# Outros
+.DS_Store
+Thumbs.db
