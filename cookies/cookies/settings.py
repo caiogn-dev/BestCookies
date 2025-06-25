@@ -166,6 +166,6 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com', 'https://bestcookies-wtdk.onrender.com']
 
 APPEND_SLASH = False
