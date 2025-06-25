@@ -14,7 +14,7 @@
     <form id="checkout-form" class="flex flex-col gap-6">
       <div>
         <label for="endereco" class="block text-sm font-semibold text-gray-700 mb-1">Endereço:</label>
-        <input type="text" id="endereco" name="endereco" class="w-full rounded-lg border border-emerald-200 px-4 py-2" required>
+        <input type="text" id="endereco" name="endereco" class="w-full rounded-lg border border-emerald-200 px-4 py-2" value="{{ user.customer.address }}" readonly>
       </div>
       <div>
         <label for="pagamento" class="block text-sm font-semibold text-gray-700 mb-1">Método de Pagamento:</label>
