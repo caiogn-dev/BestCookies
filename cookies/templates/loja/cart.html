@@ -41,4 +41,19 @@
     {% endif %}
   </div>
 </div>
+<script>
+// Feedback visual ao adicionar/remover itens do carrinho
+const forms = document.querySelectorAll('form[action*="add_carrinho"]');
+forms.forEach(form => {
+  form.addEventListener('submit', function(e) {
+    const btn = form.querySelector('button[type=submit]');
+    btn.innerText = 'Adicionado!';
+    btn.classList.add('bg-emerald-700');
+    setTimeout(() => {
+      btn.innerText = '+';
+      btn.classList.remove('bg-emerald-700');
+    }, 1000);
+  });
+});
+</script>
 {% endblock %}

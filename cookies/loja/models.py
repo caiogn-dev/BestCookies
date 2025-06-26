@@ -45,10 +45,22 @@ class CartItem(models.Model):
     def get_total_price(self):
         return self.product.price * self.quantity
 
+# Item do Pedido (snapshot do produto no momento do pedido)
+class OrderItem(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)  # preço no momento do pedido
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name} (Pedido #{self.order.pk})"
+
+    def get_total_price(self):
+        return self.price * self.quantity
+
 # Pedido
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    items = models.ManyToManyField(CartItem)
     ordered_at = models.DateTimeField(auto_now_add=True)
     is_paid = models.BooleanField(default=False)
     status = models.CharField(max_length=20, default='Pendente')
@@ -57,4 +69,4 @@ class Order(models.Model):
         return f"Pedido #{self.pk} por {self.customer.user.username}"
 
     def get_total(self):
-        return sum(item.get_total_price() for item in self.items.all())
+        return sum(item.get_total_price() for item in self.order_items.all())

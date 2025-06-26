@@ -16,6 +16,7 @@
       <nav class="flex gap-4 items-center">
         <a href="/" class="text-sm hover:text-emerald-600">Home</a>
         <a href="/carrinho/" class="text-sm hover:text-emerald-600">Carrinho</a>
+        <a href="/meus-pedidos/" class="text-sm hover:text-emerald-600">Meus Pedidos</a>
 
         {% if user.is_authenticated %}
           <span class="text-sm">Olá, {{ user.username }}</span>

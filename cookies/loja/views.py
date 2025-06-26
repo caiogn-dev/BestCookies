@@ -82,10 +82,38 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         customer, _ = Customer.objects.get_or_create(user=request.user)
         items = CartItem.objects.filter(customer=customer)
+        if not items.exists():
+            return render(request, 'loja/checkout.html', {'items': items, 'total': 0, 'erro': 'Seu carrinho está vazio.'})
+        # Atualiza endereço se editado
+        endereco = request.POST.get('endereco')
+        if endereco and endereco != customer.address:
+            customer.address = endereco
+            customer.save()
         order = Order.objects.create(customer=customer)
-        order.items.set(items)
-        order.save()
+        from .models import OrderItem
+        for item in items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price
+            )
         items.delete()
+        # Se for pedido via WhatsApp, monta a URL e redireciona
+        if request.POST.get('whatsapp'):
+            pagamento = request.POST.get('pagamento')
+            nome = request.user.get_full_name() or request.user.username
+            pedido = '\n'.join([
+                f"{oi.quantity}x {oi.product.name} - R$ {oi.get_total_price():.2f}" for oi in order.order_items.all()
+            ])
+            total = order.get_total()
+            msg = (
+                f"Olá! Quero finalizar meu pedido:\n{pedido}\nTotal: R$ {total:.2f}\n"
+                f"Método de pagamento: {pagamento}\nNome: {nome}\nEndereço: {customer.address}"
+            )
+            numero = '5563920014688'
+            whatsapp_url = f"https://wa.me/{numero}?text=" + msg.replace(' ', '%20').replace('\n', '%0A')
+            return render(request, 'loja/checkout.html', {'order': order, 'finalizado': True, 'whatsapp_url': whatsapp_url})
         return render(request, 'loja/checkout.html', {'order': order, 'finalizado': True})
 
 # Registro de usuário
@@ -132,3 +160,11 @@ class MediaListView(View):
             url = request.path.rstrip('/') + '/' + f
             links.append(f'<li><a href="{url}">{f}</a></li>')
         return HttpResponse(f'<h2>Arquivos em /imagens/{path}</h2><ul>{''.join(links)}</ul>')
+
+class OrderHistoryView(LoginRequiredMixin, TemplateView):
+    template_name = 'loja/order_history.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = Customer.objects.get(user=self.request.user)
+        context['orders'] = Order.objects.filter(customer=customer).order_by('-ordered_at')
+        return context
