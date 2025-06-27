@@ -43,3 +43,13 @@ class CartItemViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         customer = Customer.objects.get(user=self.request.user)
         serializer.save(customer=customer)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Só diminui a quantidade se for maior que 1, senão deleta
+        if instance.quantity > 1:
+            instance.quantity -= 1
+            instance.save()
+            return Response({'detail': 'Quantidade reduzida', 'quantity': instance.quantity})
+        else:
+            return super().destroy(request, *args, **kwargs)
