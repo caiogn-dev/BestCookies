@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "loja",  # Aplicação da loja de cookies
     "rest_framework",   # Django REST Framework para APIs
     "corsheaders", # Para lidar com CORS
+    "rest_framework_simplejwt.token_blacklist", # Para blacklist de tokens JWT
 ]
 
 MIDDLEWARE = [
@@ -157,7 +158,16 @@ REST_FRAMEWORK = {
 }
 
 
+## SIMPLE JWT CONFIGURATION
+from datetime import timedelta
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 
 CSRF_TRUSTED_ORIGINS = ['https://bestcookies.onrender.com', 'https://bestcookies-wtdk.onrender.com']
 
