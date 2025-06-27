@@ -27,7 +27,8 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'address', 'cep']
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
+    # Para POST, aceite apenas o id do produto
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
 
     class Meta:
         model = CartItem
