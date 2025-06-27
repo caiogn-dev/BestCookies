@@ -46,11 +46,16 @@ class CartItemViewSet(viewsets.ModelViewSet):
         serializer.save(customer=customer)
 
     def create(self, request, *args, **kwargs):
+        print('DEBUG POST DATA:', request.data)
         customer = Customer.objects.get(user=request.user)
         product_id = request.data.get('product')
         quantity = int(request.data.get('quantity', 1))
         if not product_id:
             return Response({'detail': 'Produto não informado.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            product_id = int(product_id)
+        except Exception as e:
+            return Response({'detail': f'ID do produto inválido: {product_id}'}, status=status.HTTP_400_BAD_REQUEST)
         cart_item, created = CartItem.objects.get_or_create(
             customer=customer,
             product_id=product_id,
